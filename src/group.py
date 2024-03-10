@@ -79,7 +79,7 @@ class Group:
         for member in tqdm(members[:max_user]):
             try:
                 user_url = WebDriverWait(member, 2).until(EC.presence_of_element_located((By.XPATH, xPath_group_user_url))).get_attribute("href")
-                user_url = base_url + user_url.split('/')[-2]
+                user_url = base_url + 'profile.php?id=' + user_url.split('/')[-2]
                 url_from_group.append(user_url)
             except:
                 pass

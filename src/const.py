@@ -9,8 +9,10 @@ xPath_group_user_url = ".//a[@class = 'x1i10hfl xjbqb8w x1ejq31n xd10rxx x1sy0et
 
 ### XPATH for UserProfile.py ###
 xPath_name = '//span[@class="x193iq5w xeuugli x13faqbe x1vvkbs x1xmvt09 x1lliihq x1s928wv xhkezso x1gmr53x x1cpjm7i x1fgarty x1943h6x x14qwyeo xw06pyt x579bpy xjkpybl x1xlr1w8 xzsf02u x1yc453h"]/h1[@class = "x1heor9g x1qlqyl8 x1pd3egz x1a2a7pz"]'
-xPath_gender = "//div[@class='xyamay9 xqmdsaz x1gan7if x1swvt13']/div[3]/div/div[2]/div/div/div[2]/div/div/div/div/div[1]/span"
-xPath_year = "//div[@class = 'x1hq5gj4']/../div[3]/div/div/div[2]/div[2]/div/div/div/div/span"
+xPath_basic_inf = {
+        'key' :'.//span[@class = "x193iq5w xeuugli x13faqbe x1vvkbs x1xmvt09 x1lliihq x1s928wv xhkezso x1gmr53x x1cpjm7i x1fgarty x1943h6x x4zkp8e x676frb x1nxh6w3 x1sibtaa xo1l8bm xi81zsa x1yc453h"]',
+        'value': './/span[@class = "x193iq5w xeuugli x13faqbe x1vvkbs x1xmvt09 x1lliihq x1s928wv xhkezso x1gmr53x x1cpjm7i x1fgarty x1943h6x xudqn12 x3x7a5m x6prxxf xvq8zen xo1l8bm xzsf02u x1yc453h"]'
+        }
 xPath_schools = "//div[@class = 'xyamay9 xqmdsaz x1gan7if x1swvt13']/div"
 xPath_school_name = ".//span[@class = 'x193iq5w xeuugli x13faqbe x1vvkbs x1xmvt09 x1lliihq x1s928wv xhkezso x1gmr53x x1cpjm7i x1fgarty x1943h6x xudqn12 x3x7a5m x6prxxf xvq8zen xo1l8bm xzsf02u']"
 

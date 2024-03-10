@@ -18,9 +18,9 @@ class UserInfo:
 
     def get_user_info(self, url):
         self.url = url
-        self.name, self.gender, self.year = self._get_basic_info()
+        self.name, self.basic_info_dict = self._get_basic_info()
         self.school_name = self._get_work_and_education()
-        return self.name, self.gender, self.year, self.school_name
+        return self.name, self.basic_info_dict, self.school_name
 
     def _get_element_text(self, xpath, wait=2, element=None):
         """
@@ -45,6 +45,29 @@ class UserInfo:
         except:
             return None
 
+    def _get_element_list(self, xpath, wait=2, element=None):
+        """
+        Retrieve text content of an element using XPath.
+
+        Args:
+            xpath (str): XPath of the element.
+            element: Web element to search within (optional).
+
+        Returns:
+            str: Text content of the element.
+        """
+        try:
+            if element:
+                return WebDriverWait(element, wait).until(
+                    EC.presence_of_all_elements_located((By.XPATH, xpath))
+                )
+            else:
+                return WebDriverWait(self.driver, wait).until(
+                    EC.presence_of_all_elements_located((By.XPATH, xpath))
+                )
+        except:
+            return None
+
     def _get_basic_info(self):
         """
         Retrieve basic information such as name, gender, and birth year.
@@ -53,10 +76,15 @@ class UserInfo:
         self.driver.get(self.url + url_suffix)
 
         name = self._get_element_text(xPath_name)
-        gender = self._get_element_text(xPath_gender)
-        year = self._get_element_text(xPath_year)
-        
-        return name, gender, year
+        contact_info_box = self._get_element_list('//div[@class = "xyamay9 xqmdsaz x1gan7if x1swvt13"]/div')
+        try:
+            key = self._get_element_list(xpath=xPath_basic_inf['key'], element=contact_info_box[-1])
+            value = self._get_element_list(xpath=xPath_basic_inf['value'], element=contact_info_box[-1])            
+            basic_info_dict = {key[i].text:value[i].text  for i in range(len(key))}
+        except:
+            basic_info_dict = None
+
+        return name, basic_info_dict
 
     def _get_work_and_education(self):
         """
