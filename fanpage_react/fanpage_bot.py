@@ -22,8 +22,8 @@ class GET_USER_FFANPAGE:
         driver_location = '/usr/bin/chromedriver'
         binary_location = '/usr/bin/google-chrome' # remove this on windown
 
-        self.username =  "lthcolab@gmail.com" 
-        self.password =  "Huet123" 
+        self.username = "yelan482@gmail.com" # "lthcolab@gmail.com" 
+        self.password = "Linhcute542002" ## "Huet123" 
         
         # Options
         options = ChromeOptions()
@@ -64,26 +64,32 @@ class GET_USER_FFANPAGE:
         self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         l = []
         sleep(random.randint(3, 5)) 
+
         start_time = datetime.now()
         while True:
             all_post_react = self.browser.find_elements(By.XPATH, "//span[@class='xt0b8zv x2bj2ny xrbpyxo xl423tq']")
-            if len(all_post_react) < 20: 
+            if len(all_post_react) < 12: 
                 self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 sleep(random.randint(1,3))
                 if datetime.now() - start_time > timedelta(seconds=30):
                     break
             else: break
+
         print(len(all_post_react))
         post_range = 15 if 15 < len(all_post_react) else len(all_post_react)
+
         if post_range == 0: 
             print(f"{fanpage_name} found no post")
             return l , fanpage_name
+        
+        self.browser.execute_script("window.scrollTo(0, 1000);")
         for p in range(1,3):
             print("crawling post:", p)
             post_react = all_post_react[p]
             self.actions.move_to_element(post_react).perform()
             post_react.click()
             sleep(random.randint(2, 4))
+            
             last_react_user = None
             while last_react_user is None:
                 try:
@@ -122,9 +128,11 @@ class GET_USER_FFANPAGE:
         return l, fanpage_name
     
     def get_all_user_from_fanpage(self):
-        for i, link in enumerate(self.df["link"][:5]):
-            links, fanpage_name = self.get_user_link(link)
-            self.save_user_links_to_csv(links, fanpage_name, './datasets/user_from_fanpage.csv')
+        # for i, link in enumerate(self.df["link"][:5]):
+        #     links, fanpage_name = self.get_user_link(link)
+        link = "https://www.facebook.com/huet.hueuni"
+        links, fanpage_name = self.get_user_link(link)
+        self.save_user_links_to_csv(links, fanpage_name, './datasets/user_from_fanpage.csv')
 
         self.browser.quit()
     
