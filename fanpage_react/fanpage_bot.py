@@ -7,7 +7,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import os
 import re
 import pandas as pd
-from time import sleep
+from time import sleep, time
 import random
 import csv
 from datetime import datetime, timedelta
@@ -36,9 +36,11 @@ class GET_USER_FFANPAGE:
         options.add_argument("--incognito")
         options.add_argument("--window-size=1920x1080")
         self.browser = Chrome(service=service, options=options)
+        self.browser.maximize_window()
         self.actions = ActionChains(self.browser)
 
     def login(self):
+
         self.browser.get("https://www.facebook.com/")
         assert "Facebook" in self.browser.title
         elem = self.browser.find_element(By.ID, "email")
@@ -55,14 +57,15 @@ class GET_USER_FFANPAGE:
         
         try:
             self.browser.get(link)
-        except: 
+        except Exception as e: 
+            print(f"An error occurred while try to reach '{link}'", str(e))
             return [], None
         
         sleep(random.randint(3, 5)) 
         fanpage_name = self.browser.find_element(By.XPATH, "//div[@class='x1e56ztr x1xmf6yo']").text
         print(f"Crawling Fanpage: {fanpage_name}")
         self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        l = []
+        user_links = []
         sleep(random.randint(3, 5)) 
 
         start_time = datetime.now()
@@ -70,9 +73,9 @@ class GET_USER_FFANPAGE:
             all_post_react = self.browser.find_elements(By.XPATH, "//span[@class='xt0b8zv x2bj2ny xrbpyxo xl423tq']")
             if len(all_post_react) < 12: 
                 self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                sleep(random.randint(1,3))
+                sleep(random.randint(2,4))
                 if datetime.now() - start_time > timedelta(seconds=30):
-                    break
+                    break   
             else: break
 
         print(len(all_post_react))
@@ -80,9 +83,11 @@ class GET_USER_FFANPAGE:
 
         if post_range == 0: 
             print(f"{fanpage_name} found no post")
-            return l , fanpage_name
+            return user_links , fanpage_name
         
+        # Scroll back to position 1000
         self.browser.execute_script("window.scrollTo(0, 1000);")
+
         for p in range(1,3):
             print("crawling post:", p)
             post_react = all_post_react[p]
@@ -91,6 +96,8 @@ class GET_USER_FFANPAGE:
             sleep(random.randint(2, 4))
             
             last_react_user = None
+            start_time = time()
+            last_a_tag = None
             while last_react_user is None:
                 try:
                     last_react_user = self.browser.find_element(
@@ -98,24 +105,33 @@ class GET_USER_FFANPAGE:
                         f"/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[1]/div[{post_react.text}]/div/div"
                     )
                 except:
+
                     popup = self.browser.find_element(By.XPATH, "/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[2]")
                     # Find all <a> tags within the element
                     a_tags = popup.find_elements(By.XPATH, ".//a")
+
+                    if a_tags[-1] != last_a_tag:
+                        start_time = time()
+                    elif a_tags[-1] == last_a_tag and time() - start_time > 10:
+                        break 
+
                     # Get the last <a> tag
                     last_a_tag = a_tags[-1]
                     # Scroll the last <a> tag into view
+                    # self.browser.execute_script("arguments[0].scrollIntoView(true);", last_a_tag) 
+                    self.browser.execute_script("document.body.style.transition = 'scroll-behavior 0.8s ease';")
                     self.browser.execute_script("arguments[0].scrollIntoView(true);", last_a_tag)
-                    sleep(random.randint(0,3))
-            for i in range(1, int(post_react.text)):
-                link = self.browser.find_element(
-                    By.XPATH,
-                    f"/html/body/div[1]/div/div[1]/div/div[4]/div/div/div[1]/div/div[2]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[1]/div[{i}]/div/div/div[2]/div[1]/div/div/div/span/div/a",
-                )
-                z = link.get_attribute("href")
-                z = re.sub(r"__cft__.*", "", z)
-                l.append(z)
-                # print(z)
-            # print(len(l))
+                    # push transition back
+                    self.browser.execute_script("document.body.style.transition = '';")
+                    sleep(random.randint(2,4))
+
+            a_tags = popup.find_elements(By.XPATH, ".//a")
+            print(len(a_tags))
+            for a in a_tags:
+                link = a.get_attribute("href")
+                link = re.sub(r"__cft__.*", "", link)
+                user_links.append(link)
+                
             # close_element
             self.browser.find_element(
                 By.XPATH,
@@ -125,16 +141,18 @@ class GET_USER_FFANPAGE:
 
         print(f"{fanpage_name} done")
 
-        return l, fanpage_name
+        return user_links, fanpage_name
     
     def get_all_user_from_fanpage(self):
-        # for i, link in enumerate(self.df["link"][:5]):
-        #     links, fanpage_name = self.get_user_link(link)
-        link = "https://www.facebook.com/huet.hueuni"
-        links, fanpage_name = self.get_user_link(link)
-        self.save_user_links_to_csv(links, fanpage_name, './datasets/user_from_fanpage.csv')
-
-        self.browser.quit()
+        try:
+            for i, link in enumerate(self.df["link"]):
+                user_links, fanpage_name = self.get_user_link(link)
+                self.save_user_links_to_csv(user_links, fanpage_name, './datasets/user_from_fanpage.csv')
+            self.browser.quit()
+        except Exception as e: 
+            print("An error occurred:", str(e))
+            self.browser.quit()
+        return
     
     def save_user_links_to_csv(self, links, fanpage_name, filename):
         os.makedirs(os.path.dirname(filename), exist_ok=True)
