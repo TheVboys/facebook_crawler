@@ -24,3 +24,4 @@ xPath_school_name = ".//span[@class = 'x193iq5w xeuugli x13faqbe x1vvkbs x1xmvt0
 
 xPathFriends = ".x1iyjqo2.x1pi30zi [href]"
 arialLabelFriendTab = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div[2]/a[1]"
+xPathTabFriend = "//span[text()='Friends']"
