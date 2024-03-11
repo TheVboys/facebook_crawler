@@ -78,9 +78,6 @@ class UserFriend:
                 num_of_loaded_friends = len(self._loop_friends_list(xPathFriends))
             except TimeoutException:
                 break  
-        urlList = []
-        my_friend = self.driver.find_elements(By.CSS_SELECTOR, xPathFriends)
-        for friend in my_friend:
-            url = friend.get_attribute("href")
-            urlList.append(url)
+        urlList = [friend.get_attribute("href") for friend in self.driver.find_elements(By.CSS_SELECTOR, xPathFriends)]
         return urlList
+
