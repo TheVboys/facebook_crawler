@@ -9,7 +9,7 @@ from time import sleep
 from typing import List
 from tqdm import tqdm
 import random
-
+import re
 
 class Group:
     def __init__(self, browser):
@@ -41,9 +41,10 @@ class Group:
         self.group_url = url_group
         self.browser.get(url_group+'/members')
         self.browser.execute_script("document.body.style.zoom='10%'")
-        self.group_name = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.XPATH, Xpath_group_name))).text
-        self.group_member = int(WebDriverWait(self.browser, 2).until(EC.presence_of_element_located((By.XPATH, Xpath_group_max_members[:-5]))).text[4:])
-        
+        self.group_name = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.XPATH, xPath_group_name))).text
+        group_member = WebDriverWait(self.browser, 2).until(EC.presence_of_element_located((By.XPATH, xPath_group_max_members))).text
+        self.group_member = int(re.sub('[^0-9]','', group_member))
+
         if max_user == 0:
             max_user = self.group_member
             print(f"Current members of {self.group_name}: {self.group_member}")
@@ -85,3 +86,6 @@ class Group:
                 pass
 
         return url_from_group
+
+
+#####  Handle error for group over 1000, 1.000.000
