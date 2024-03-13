@@ -4,6 +4,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 
+from facebook_scraper import get_reactors
+
 import os
 import re
 import pandas as pd
@@ -85,14 +87,12 @@ class GET_USER_FFANPAGE:
         for i in range(1,50):
             try:
                 # self.browser.execute_script("window.scrollTo(0, 1000);")
-                # Hover chuột vào post
+                # Hover 
                 post = self.browser.find_element(By.XPATH,
                                             f"/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div[2]/div/div[2]/div/div[{i}]/div/div/div/div/div/div/div/div/div/div/div[2]/div/div/div[2]/div/div[2]/div/div[2]/span/span/span[2]/span"
                                             )
                 self.actions.move_to_element(post).perform()
                 # self.browser.execute_script("window.scrollTo(0, 1000);")
-
-                # Lấy link từ post và in ra 
                 a_tag = post.find_element(By.XPATH, ".//a")
                 link = a_tag.get_attribute("href")
                 link = re.sub(r"__cft__.*", "", link)
@@ -109,10 +109,10 @@ class GET_USER_FFANPAGE:
     def get_all_post_from_fanpage(self, start=0):
         
         try:
-            for i, link in enumerate(self.df["link"][start:10]):
+            for i, link in enumerate(self.df["link"][start:]):
             
                 user_links, fanpage_name = self.get_post_link(link)
-                self.save_post_links_to_csv(user_links, fanpage_name, './datasets/post_fanpage.csv')
+                self.save_to_csv(user_links, fanpage_name, './datasets/post_fanpage.csv')
         
         except Exception as e: 
                 print("An error occurred:", str(e))
@@ -123,9 +123,45 @@ class GET_USER_FFANPAGE:
         return
     
     def get_reactors(self):
-        pass
+        post_links = pd.read_csv("./datasets/post_fanpage.csv")
+        
+
+        for index, post in post_links.iterrows():
+            link = post["post_links"]
+            fanpage_name = post["fanpage"]
+
+            links = []
+            user_names = []
+            post_id = self.extract_post_id(link)
+            if post_id is not None:
+                for reactors in get_reactors(post_id, cookies='./facebook_cookies.txt',
+                                    options={"allow_extra_requests": True,
+                                            "reactions": True, 'reactors': True},
+                                    ):
+                    links.append(reactors["link"])
+                    user_names.append(reactors["name"])
+                self.save_to_csv(links, fanpage_name, "./datasets/reactors.csv", "user_url")
+        try:
+            self.browser.quit()
+        except:
+            pass
+        return
     
-    def save_post_links_to_csv(self, links, fanpage_name, filename):
+    def extract_post_id(self, url):
+        # Define the regular expression pattern to match the post ID
+        pattern = r"(?:story_fbid=|posts/|id=|videos/)([^/&?]+)"
+        # Search for the pattern in the URL
+        match = re.search(pattern, url)
+        # If a match is found, extract the post ID
+        if match:
+            post_id = match.group(1)
+            # Remove any trailing characters after the post ID
+            post_id = post_id.split(":")[0]
+            return post_id
+        else:
+            return None
+        
+    def save_to_csv(self, links, fanpage_names, filename, col1="post_links", col2="fanpage"):
         os.makedirs(os.path.dirname(filename), exist_ok=True)
         file_exists = os.path.isfile(filename)
         
@@ -133,10 +169,11 @@ class GET_USER_FFANPAGE:
             writer = csv.writer(file)
             # If the file doesn't exist, write the header
             if not file_exists:
-                writer.writerow(['user_link', 'fanpage'])
-            # Write the links and fan page name to the file
+                writer.writerow([col1, col2])
+            # Write the links and fan page name to the file 
             for link in links:
-                writer.writerow([link, fanpage_name])
+                writer.writerow([link, fanpage_names])
 
 G = GET_USER_FFANPAGE()
 G.get_all_post_from_fanpage()
+G.get_reactors()
