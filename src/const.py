@@ -29,3 +29,4 @@ xPath_places_inf = {
 friendAttr = ".x1iyjqo2.x1pi30zi [href]"
 friendXPath = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div[2]/a[1]"
 endTabXpath = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div[2]/div/div/div/div/div[1]/div/div/div/h2/span/a"
+scrollFriendTab = "window.scrollTo(0, document.body.scrollHeight);"

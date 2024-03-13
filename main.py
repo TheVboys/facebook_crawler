@@ -20,9 +20,9 @@ login(driver, "yelan482@gmail.com", "Linhcute542002")
 time.sleep(5)
 
 us = UserFriend(driver)
-us._move_to_friendtab("https://www.facebook.com/minhtri.ho.3914")
+us._move_to_friendtab("https://www.facebook.com/profile.php?id=100093944898219")
 checkvar = us._check_public(friendXPath)
 if checkvar:
-    friendUrlList = us._get_friends_list()
+    friendUrlList = us._get_friends_list(29)
     df = pd.DataFrame(friendUrlList)
     df.to_csv('result.csv')

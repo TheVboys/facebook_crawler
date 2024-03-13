@@ -41,16 +41,25 @@ class UserFriend:
 
         return len(end_tags) > 0
 
-    def _get_friends_list(self):
+    def _get_friends_list(self, max_friends: int):
 
-        num_of_loaded_friends = len(self._loop_friends_list(friendAttr))
+        numOfLoadedFriends = len(self._loop_friends_list(friendAttr))
+        friendCount = 0
+        limit = 0
+        print(max_friends)
+
 
         while True:
-            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            self.driver.execute_script(scrollFriendTab)
             try:
-                WebDriverWait(self.driver, 2).until(lambda driver: len(self._loop_friends_list(friendAttr)) > num_of_loaded_friends)
-                num_of_loaded_friends = len(self._loop_friends_list(friendAttr))  
-
+                WebDriverWait(self.driver, 2).until(lambda driver: len(self._loop_friends_list(friendAttr)) > numOfLoadedFriends)
+                numOfLoadedFriends = len(self._loop_friends_list(friendAttr))  
+                friendCount = len(self.driver.find_elements(By.CSS_SELECTOR, friendAttr))
+               
+                if friendCount >= max_friends:
+                    print("Maximum number of friends reached, stopping...", limit)
+                    break
+        
             except TimeoutException:
                 if self._is_end_of_friend_tab():
                     print("No more friend to receive, stopping...")
@@ -58,6 +67,6 @@ class UserFriend:
                 print("Getting TimeoutException, please check your FUCKING internet connection, we will retrying...")
 
         urlList = [friend.get_attribute("href") for friend in self.driver.find_elements(By.CSS_SELECTOR, friendAttr)]
-
-        return urlList
+ 
+        return urlList[2:max_friends+2] if max_friends < len(urlList)-2 else urlList[2:]
 
