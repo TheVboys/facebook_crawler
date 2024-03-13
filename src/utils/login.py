@@ -1,5 +1,5 @@
 from selenium.webdriver.common.by import By
-
+from src.const import *
 
 def login(driver, username, password):
     """
@@ -10,6 +10,7 @@ def login(driver, username, password):
         username (str): Username or email for login.
         password (str): Password for login.
     """
+    driver.get(base_url)
     try:
         user_name_field = driver.find_element(By.XPATH, "//input[@name='email']").send_keys(username)
         password_field = driver.find_element(By.XPATH, "//input[@name='pass']").send_keys(password)
