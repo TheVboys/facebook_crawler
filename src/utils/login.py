@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
-
+import time
+from src.const import *
 
 def login(driver, username, password):
     """
@@ -10,12 +11,15 @@ def login(driver, username, password):
         username (str): Username or email for login.
         password (str): Password for login.
     """
-    try:
-        user_name_field = driver.find_element(By.XPATH, "//input[@name='email']").send_keys(username)
-        password_field = driver.find_element(By.XPATH, "//input[@name='pass']").send_keys(password)
-        login_button = driver.find_element(By.XPATH, "//button[@type='submit']").click()
-        print('Success Login')
-    except:
-        print('Error Login')
+    driver.get(base_url)
+    driver.maximize_window()
+    user_name = driver.find_element(By.XPATH, xPathUsername)
+    user_name.send_keys(username)
+    pass_word = driver.find_element(By.XPATH, xPathPassword)
+    pass_word.send_keys(password)
+    log_in_button = driver.find_element(By.XPATH, xPathSubmit).click()
+    time.sleep(5)
+    print('Success Login')
+
 
 
