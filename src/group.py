@@ -1,5 +1,7 @@
 # group.py
 from const import *
+from utils import get_element
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -41,8 +43,8 @@ class Group:
         self.group_url = url_group
         self.browser.get(url_group+'/members')
         self.browser.execute_script("document.body.style.zoom='10%'")
-        self.group_name = WebDriverWait(self.browser, 5).until(EC.presence_of_element_located((By.XPATH, xPath_group_name))).text
-        group_member = WebDriverWait(self.browser, 2).until(EC.presence_of_element_located((By.XPATH, xPath_group_max_members))).text
+        self.group_name = get_element.get_element(browser=self.browser, xpath=xPath_group_name).text
+        group_member = get_element.get_element(browser=self.browser, xpath=xPath_group_max_members).text
         self.group_member = int(re.sub('[^0-9]','', group_member))
 
         if max_user == 0:
@@ -59,7 +61,7 @@ class Group:
         while len(members) < max_user:   
             self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             sleep(random.randint(3, 5)) 
-            members = WebDriverWait(self.browser, 2).until(EC.presence_of_all_elements_located((By.XPATH, xPath_group_members)))
+            members = get_element.get_element_list(self.browser, xpath=xPath_group_members)
 
             print(f'==={len(members)}/{max_user}')
 
@@ -79,7 +81,8 @@ class Group:
         url_from_group = []
         for member in tqdm(members[:max_user]):
             try:
-                user_url = WebDriverWait(member, 2).until(EC.presence_of_element_located((By.XPATH, xPath_group_user_url))).get_attribute("href")
+                # user_url = WebDriverWait(member, 2).until(EC.presence_of_element_located((By.XPATH, xPath_group_user_url))).get_attribute("href")
+                user_url = get_element.get_element(browser=self.browser, xpath=xPath_group_user_url, element=member).get_attribute("href")
                 user_url = base_url + 'profile.php?id=' + user_url.split('/')[-2]
                 url_from_group.append(user_url)
             except:
