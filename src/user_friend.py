@@ -10,74 +10,54 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import re
 
-# Constants should be defined within the class or as module-level constants.
-# I will assume these constants are defined elsewhere.
-
 class UserFriend:
 
     def __init__(self, driver):
-        """
-        Constructor for UserFriend class.
-
-        Args:
-        - driver: Selenium WebDriver object.
-        """
         self.driver = driver
 
-    def _move_to_friendtab(self, url):
-        """
-        Moves to the friend tab of a user's profile.
-
-        Args:
-        - url: URL of the user's profile.
-        """
+    def _move_to_friendtab(self, url: str):
         url_suffix = '&sk=friends' if 'id=' in url else '/friends'
         self.driver.get(url + url_suffix)
         self.driver.execute_script("document.body.style.zoom='10%'")
 
-    def _check_public(self, path):
-        """
-        Checks if the friend list is public or private.
+    def _check_public(self, xpath: str) -> bool:
 
-        Args:
-        - path: XPath of the element indicating a friend's presence.
+        hrefAtt = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, xpath))).get_attribute("href")
+        match = re.search(r'friends_all$', str(hrefAtt))
 
-        Returns:
-        - 'visible' if the friend list is visible.
-        - 'invisible' if the friend list is invisible.
-        """
-        test_friend = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, path)))
-        abc = test_friend.get_attribute("href")
-        match = re.search(r'friends_all$', str(abc))
-        return 'visible' if match else 'invisible'
+        return True if match else False
 
-    def _loop_friends_list(self, path):
-        """
-        Loops through the list of friends.
+    def _loop_friends_list(self, css_attr: str):
 
-        Args:
-        - path: CSS selector for the friend list.
+        return self.driver.find_elements(By.CSS_SELECTOR, css_attr)
 
-        Returns:
-        - List of Selenium WebElements representing friends.
-        """
-        return self.driver.find_elements(By.CSS_SELECTOR, path)
+    def _is_end_of_friend_tab(self) -> int:
+
+        try:
+            end_tags = self.driver.find_elements(By.XPATH, endTabXpath)
+
+        except:
+            end_tags = []
+
+        return len(end_tags) > 0
 
     def _get_friends_list(self):
-        """
-        Retrieves the list of friends.
 
-        Returns:
-        - List of URLs of friends' profiles.
-        """
-        num_of_loaded_friends = len(self._loop_friends_list(xPathFriends))
+        num_of_loaded_friends = len(self._loop_friends_list(friendAttr))
+
         while True:
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             try:
-                WebDriverWait(self.driver, 2).until(lambda driver: len(self._loop_friends_list(xPathFriends)) > num_of_loaded_friends)
-                num_of_loaded_friends = len(self._loop_friends_list(xPathFriends))
+                WebDriverWait(self.driver, 2).until(lambda driver: len(self._loop_friends_list(friendAttr)) > num_of_loaded_friends)
+                num_of_loaded_friends = len(self._loop_friends_list(friendAttr))  
+
             except TimeoutException:
-                break  
-        urlList = [friend.get_attribute("href") for friend in self.driver.find_elements(By.CSS_SELECTOR, xPathFriends)]
+                if self._is_end_of_friend_tab():
+                    print("No more friend to receive, stopping...")
+                    break  
+                print("Getting TimeoutException, please check your FUCKING internet connection, we will retrying...")
+
+        urlList = [friend.get_attribute("href") for friend in self.driver.find_elements(By.CSS_SELECTOR, friendAttr)]
+
         return urlList
 

@@ -18,9 +18,9 @@ class UserInfo:
 
     def get_user_info(self, url):
         self.url = url
-        self.name, self.basic_info_dict = self._get_basic_info()
-        self.school_name = self._get_work_and_education()
-        return self.name, self.basic_info_dict, self.school_name
+        name, basic_info_dict = self._get_basic_info()
+        school_name = self._get_work_and_education()
+        return name, basic_info_dict, school_name
 
     def _get_element_text(self, xpath, wait=2, element=None):
         """
