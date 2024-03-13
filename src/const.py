@@ -24,3 +24,8 @@ xPath_places_inf = {
         'key' :'.//span[@class = "xi81zsa x1nxh6w3 x1sibtaa"]',
         'value': './/span[@class = "x193iq5w xeuugli x13faqbe x1vvkbs x1xmvt09 x1lliihq x1s928wv xhkezso x1gmr53x x1cpjm7i x1fgarty x1943h6x xudqn12 x3x7a5m x6prxxf xvq8zen xo1l8bm xzsf02u"]'
         }
+
+
+friendAttr = ".x1iyjqo2.x1pi30zi [href]"
+friendXPath = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div[1]/div/div/div/div/div[2]/div/div/div/div[2]/a[1]"
+endTabXpath = "/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div/div[4]/div/div/div/div[2]/div/div/div/div/div[1]/div/div/div/h2/span/a"
