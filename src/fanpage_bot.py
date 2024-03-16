@@ -14,7 +14,7 @@ import random
 import csv
 from datetime import datetime, timedelta
 
-class GET_USER_FFANPAGE:
+class GetUserFanpage:
     def __init__(self):
         
         #dataset
@@ -156,6 +156,6 @@ class GET_USER_FFANPAGE:
             for link in links:
                 writer.writerow([link, fanpage_names])
 
-# G = GET_USER_FFANPAGE()
+# G = GetUserFanpage()
 # G.get_all_post_from_fanpage()
 # G.get_reactors()
