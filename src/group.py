@@ -1,6 +1,6 @@
 # group.py
-from const import *
-from utils import get_element
+from src.const import *
+from src.utils import get_element
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -88,7 +88,7 @@ class Group:
             except:
                 pass
 
-        return url_from_group
+        return url_from_group       
 
 
 #####  Handle error for group over 1000, 1.000.000

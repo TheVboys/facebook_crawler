@@ -21,13 +21,13 @@ class GetUserFanpage:
         self.df = pd.read_csv('./datasets/fanpages.csv')
 
         # webdriver
-        driver_location = '/usr/bin/chromedriver'
-        binary_location = '/usr/bin/google-chrome' # remove this on windown
+        driver_location = "extensions/chromedriver.exe"
+        # binary_location = '/usr/bin/google-chrome' # remove this on windown
 
         # Options
         options = ChromeOptions()
         service = Service(executable_path=driver_location)
-        options.binary_location = binary_location # remove this on windown
+        # options.binary_location = binary_location # remove this on windown
 
         options.add_experimental_option("detach", True)
         options.add_argument("--disable-extensions")
