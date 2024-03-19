@@ -1,8 +1,8 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from const import *
-from utils import get_element
+from src.const import *
+from src.utils import get_element
 
 
 class UserInfo:

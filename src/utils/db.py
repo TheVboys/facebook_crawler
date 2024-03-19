@@ -1,12 +1,29 @@
 import pymongo
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-uri = "mongodb+srv://rinputin482:Vuchimto20022002@cluster0.5n8iybx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-# Create a new client and connect to the server
-client = MongoClient(uri, server_api=ServerApi('1'))
-# Send a ping to confirm a successful connection
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
+from datetime import datetime
+
+class DatabaseClient:
+
+    def __init__(self, uri):
+        self.client = MongoClient(uri, server_api=ServerApi('1'))
+        self.database = self.client["facebook"]
+        
+        pingSuccesfull = False
+        while pingSuccesfull == False:
+            try:
+                self.client.admin.command('ping')
+                now = datetime.now().strftime('%H:%M:%S')
+                print(f"{now} utils.Database: Pinged your deployment. You successfully connected to MongoDB!")
+                pingSuccesfull = True
+            except Exception:
+                now = datetime.now().strftime('%H:%M:%S')
+                print(f"{now} utils.Database: You cannot connect to MongoDB. Retrying...")
+
+    def _insert_url(self, list_url, type):
+        now = datetime.now().strftime('%H:%M:%S')
+        print(f"{now} utils.Database: Inserting url to collection, please wait...")
+        listOfDucuments = [{'type': type, 'url': url} for url in list_url]
+        urlCollection = self.database.get_collection("url_list")
+        urlCollection.insert_many(listOfDucuments)
+
