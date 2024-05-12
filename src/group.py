@@ -43,6 +43,7 @@ class Group:
         self.group_url = url_group
         self.browser.get(url_group+'/members')
         self.browser.execute_script("document.body.style.zoom='10%'")
+        # print(xPath_group_name)
         self.group_name = get_element.get_element(browser=self.browser, xpath=xPath_group_name).text
         group_member = get_element.get_element(browser=self.browser, xpath=xPath_group_max_members).text
         self.group_member = int(re.sub('[^0-9]','', group_member))

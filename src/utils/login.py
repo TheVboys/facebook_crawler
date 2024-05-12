@@ -1,5 +1,7 @@
 from selenium.webdriver.common.by import By
-from src.const import *
+import sys
+sys.path.append('../')
+from const import *
 from datetime import datetime
 now = datetime.now().strftime('%H:%M:%S')
 
