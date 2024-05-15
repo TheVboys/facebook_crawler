@@ -3,7 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from src.const import *
 from src.utils import get_element
-
+import time
 
 class UserInfo:
     """Class to represent a user profile."""
@@ -20,7 +20,9 @@ class UserInfo:
     def get_user_info(self, url):
         self.url = url
         name, basic_info_dict = self._get_basic_info()
+        time.sleep(2)
         school_name = self._get_work_and_education()
+        time.sleep(2)
         places = self._place_lives()
         return name, basic_info_dict, school_name, places
 
