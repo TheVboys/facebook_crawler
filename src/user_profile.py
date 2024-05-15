@@ -36,9 +36,9 @@ class UserInfo:
         try:
             key = get_element.get_element_list(self.browser, xpath=xPath_basic_inf['key'], element=contact_info_box[-1])
             value = get_element.get_element_list(self.browser, xpath=xPath_basic_inf['value'], element=contact_info_box[-1])
-            basic_info_dict = {key[i].text:value[i].text  for i in range(len(key))}
+            basic_info_dict = {key[i].text.replace(' ',''):value[i].text  for i in range(len(key))}
         except:
-            basic_info_dict = None
+            basic_info_dict = {}
         return name.strip(), basic_info_dict
 
 
@@ -53,7 +53,7 @@ class UserInfo:
             school_box_list = get_element.get_element_list(self.browser, xpath=xPath_schools)[1:]
             for school in school_box_list:
                 try:
-                    key = get_element.get_element(browser=self.browser, xpath=xPath_schools_inf['key'], element=school).text
+                    key = get_element.get_element(browser=self.browser, xpath=xPath_schools_inf['key'], element=school).text.replace(' ','')
                     value = get_element.get_element(browser=self.browser, xpath=xPath_schools_inf['value'], element=school).text
                     schools_inf[key] = value
                 except:
@@ -72,7 +72,7 @@ class UserInfo:
         try:
             key = get_element.get_element_list(self.browser, xpath=xPath_places_inf['key'], element=places)
             value = get_element.get_element_list(self.browser, xpath=xPath_places_inf['value'], element=places)
-            places_info_dict = {key[i].text:value[i].text  for i in range(len(key))}
+            places_info_dict = {key[i].text.replace(' ',''):value[i].text  for i in range(len(key))}
         except:
-            places_info_dict = None
+            places_info_dict = {}
         return places_info_dict

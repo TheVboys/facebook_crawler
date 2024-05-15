@@ -46,6 +46,7 @@ class Group:
         # print(xPath_group_name)
         self.group_name = get_element.get_element(browser=self.browser, xpath=xPath_group_name).text
         group_member = get_element.get_element(browser=self.browser, xpath=xPath_group_max_members).text
+        print(group_member)
         self.group_member = int(re.sub('[^0-9]','', group_member))
 
         if max_user == 0:
@@ -59,26 +60,26 @@ class Group:
         members = []
         last_members_len = len(members)
         count = 0
-        while len(members) < max_user:   
-            self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            sleep(random.randint(3, 5)) 
-            members = get_element.get_element_list(self.browser, xpath=xPath_group_members)
+        while len(members) < max_user: 
+                self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                sleep(random.randint(3, 5)) 
+                members = get_element.get_element_list(self.browser, xpath=xPath_group_members)
 
-            print(f'==={len(members)}/{max_user}')
+                print(f'==={len(members)}/{max_user}')
 
-            if len(members) == last_members_len:
-                count+=1
-                if count == 3:
-                    print(f'Error: Cannot get more. Only get {len(members)} users in this session.')
+                if len(members) == last_members_len:
+                    count+=1
+                    if count == 3:
+                        print(f'Error: Cannot get more. Only get {len(members)} users in this session.')
+                        break
+                else:  count=0
+                
+                last_members_len = len(members)
+                if time_limit != 0 and datetime.now() - start_time > timedelta(seconds=time_limit): 
+                    print(f'Reach time limit. Get {len(members)} users in this session.')
+                    max_user = len(members)  # set max_user to current member list
                     break
-            else:  count=0
-            
-            last_members_len = len(members)
-            if time_limit != 0 and datetime.now() - start_time > timedelta(seconds=time_limit): 
-                print(f'Reach time limit. Get {len(members)} users in this session.')
-                max_user = len(members)  # set max_user to current member list
-                break
-
+                
         url_from_group = []
         for member in tqdm(members[:max_user]):
             try:
