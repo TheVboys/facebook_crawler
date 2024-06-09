@@ -74,7 +74,7 @@ class UserFriend:
 
 
 
-    def _get_friends_list(self, max_urls = 0, time_limit = 0):
+    def get_friends_list(self, max_urls = 0, time_limit = 0):
         """
         Get the URLs of the user's friends.
 

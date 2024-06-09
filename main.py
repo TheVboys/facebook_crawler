@@ -43,21 +43,6 @@ def get_friend(url_list, check_point = 0):
                 result = []
                 now = datetime.now().strftime('%H:%M:%S')
                 print(f"{now} main: Finished Insert Checkpoint")
-# friendClient._open_friend_tab("https://www.facebook.com/fear.xu")
-# isVisible = friendClient._is_visible(friendXPath)
-# if isVisible:
-#     friendUrlList = friendClient._get_friends_list(200)
-#     db._insert_url(friendUrlList, "friend")
-
-
-    
-
-# grList = groupClient.get_url_from_members("https://www.facebook.com/groups/402804082330257", 500)
-# df = pd.DataFrame(grList)
-# df.to_csv('result.csv')
-
-# uif = UserInfo(driver)
-# uif.get_user_info
 
 get_friend(starterUrl, 200)
 now = datetime.now().strftime('%H:%M:%S')

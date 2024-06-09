@@ -156,6 +156,6 @@ class GetUserFanpage:
             for link in links:
                 writer.writerow([link, fanpage_names])
 
-# G = GetUserFanpage()
-# G.get_all_post_from_fanpage()
-# G.get_reactors()
+G = GetUserFanpage()
+G.get_all_post_from_fanpage()
+G.get_reactors()
