@@ -51,8 +51,6 @@ python src/fanpage_bot.py
 
 ### 2. Craw Group members
 
-> Sample usage
-
 ```python
 import src.group
 import pandas as pd
