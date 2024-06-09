@@ -18,7 +18,7 @@ python=3.9
 
 <p align="center">
     
-    <img src"https://github.com/TheVboys/facebook_crawler/tree/main/assest/crawl_flow.png"  alt="System flow">
+<img src="https://github.com/TheVboys/facebook_crawler/blob/main/assest/crawl_flow.png"  alt="System flow">
 
 </p>
 
