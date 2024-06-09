@@ -1,6 +1,10 @@
 # facebook_crawler
-Craw data from facebook
+This project aims to build a comprehensive database to support student recruitment, specifically focusing on high school students using Facebook who show tendencies to enroll in fields related to the Faculty of Engineering and Technology.
 
+**Objectives**
+- Collect Fanpage List: Gather a list of fanpages from 27 high schools.
+- Web Crawler Development: Develop a web crawler to collect information about users interacting with these fanpages.
+- Data Cleaning and Standardization: Clean and standardize the collected data.
 
 ## System Requirements
 
@@ -29,7 +33,6 @@ python=3.9
 git clone https://github.com/TheVboys/facebook_crawler
 ```
 2. cd to the folder
-
 ```bash
 cd facebook_crawler
 ```
@@ -59,7 +62,7 @@ group_crawler = group.Group(browser=browser)
 
 for url_group in group_urls:
     member_urls = group_crawler.get_url_from_members(url_group, common=True, max_user=20)
-    # Read the existing CSV file into a DataFrame
+
     file_name = '../datasets/user_from_group_2.csv'
     existing_df = pd.read_csv(file_name)
 
@@ -146,5 +149,5 @@ from src.user_friend import UserFriend
 
 F = UserFriend()
 F.get_friends_list()
-```
+``` 
 
